@@ -18,6 +18,10 @@ module.exports = function (grunt) {
       dist: 'dist'
     },
     watch: {
+      jade: {
+        files: ['app/**/*.jade'],
+        tasks: ['jade']
+      },
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer']
@@ -25,10 +29,6 @@ module.exports = function (grunt) {
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['copy:styles', 'autoprefixer']
-      },
-      jade: {
-        files: ['app/**/*.jade'],
-        tasks: ['jade']
       },
       livereload: {
         options: {
@@ -216,7 +216,7 @@ module.exports = function (grunt) {
       }
     },
     jade: {
-      dist: {
+      compile: {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>',
@@ -226,14 +226,8 @@ module.exports = function (grunt) {
             '!bower_components/**/*.jade'
             ],
           ext: '.html'
-        }],
-        options: {
-          i18n: {
-            locales: '<%= yeoman.app %>/locales/*.json',
-            namespace: '$i18n'
-          },
-        }
-      },
+        }]
+      }
     },
     // Put files not handled in other tasks here
     copy: {
@@ -318,7 +312,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-jade-i18n');
+  grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.event.on('watch', function(action, filepath, target) {
@@ -349,8 +343,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'concurrent:dist',
     'useminPrepare',
+    'concurrent:dist',
     'autoprefixer',
     'concat',
     'ngmin',
