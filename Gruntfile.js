@@ -18,15 +18,13 @@ module.exports = function (grunt) {
       dist: 'dist'
     },
     watch: {
+      jade: {
+        files: ['app/**/*.jade'],
+        tasks: ['jade']
+      },
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer']
-      },
-      jade: {
-        files: [
-        '<% yeoman.app %>/{,*/}*.jade'
-        ],
-        tasks: ['jade']
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
@@ -264,14 +262,17 @@ module.exports = function (grunt) {
     },
     concurrent: {
       server: [
+        'jade',
         'compass:server',
         'copy:styles'
       ],
       test: [
+        'jade',
         'compass',
         'copy:styles'
       ],
       dist: [
+        'jade',
         'compass:dist',
         'copy:styles',
         'imagemin',
@@ -312,6 +313,11 @@ module.exports = function (grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-jade');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+
+  grunt.event.on('watch', function(action, filepath, target) {
+    grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
+  });
 
   grunt.registerTask('server', function (target) {
     if (target === 'dist') {
@@ -322,7 +328,6 @@ module.exports = function (grunt) {
       'clean:server',
       'concurrent:server',
       'autoprefixer',
-      'jade',
       'connect:livereload',
       'watch'
     ]);
