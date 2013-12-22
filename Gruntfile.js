@@ -216,7 +216,7 @@ module.exports = function (grunt) {
       }
     },
     jade: {
-      compile: {
+      dist: {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>',
@@ -238,6 +238,7 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
+            'locales/*.json',
             '*.{ico,png,txt}',
             '.htaccess',
             'bower_components/**/*',
@@ -264,7 +265,8 @@ module.exports = function (grunt) {
       server: [
         'jade',
         'compass:server',
-        'copy:styles'
+        'copy:styles',
+        'copy:dist'
       ],
       test: [
         'jade',
@@ -275,6 +277,7 @@ module.exports = function (grunt) {
         'jade',
         'compass:dist',
         'copy:styles',
+        'copy:dist',
         'imagemin',
         'svgmin',
         'htmlmin'
@@ -320,6 +323,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('server', function (target) {
+    grunt.log.writeln('The target: ' + target);
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
@@ -346,12 +350,9 @@ module.exports = function (grunt) {
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    'concat',
     'ngmin',
-    'copy:dist',
     'cdnify',
     'jade',
-    'cssmin',
     'uglify',
     'rev',
     'usemin'
